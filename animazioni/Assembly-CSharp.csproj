@@ -57,6 +57,8 @@
      <Compile Include="Assets\Cowboy\Script\CowboyScriptLookat.cs" />
      <Compile Include="Assets\Fighter Pack Bundle Free\Code\CameraControl.cs" />
      <Compile Include="Assets\Fighter Pack Bundle Free\Code\FighterAnimationDemo.cs" />
+     <Compile Include="Assets\TurnLight.cs" />
+     <Compile Include="Assets\changeImage.cs" />
      <None Include="Assets\Horse\SoftAlpha.shader" />
  <Reference Include="UnityEngine.Analytics">
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/UnityAnalytics/UnityEngine.Analytics.dll</HintPath>
