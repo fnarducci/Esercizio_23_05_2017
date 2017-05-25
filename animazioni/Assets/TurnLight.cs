@@ -33,4 +33,9 @@ public class TurnLight : MonoBehaviour
 			accensione = true;
 		}
 	}
+
+	public void intensity(float intensity)
+	{
+		GetComponent<Light> ().intensity = intensity;
+	}
 }

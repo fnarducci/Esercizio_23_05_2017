@@ -4,43 +4,60 @@ using UnityEngine;
 
 public class CowboyMove : MonoBehaviour 
 {
+	//i due cowboy
+	public GameObject altroCowboy;
 	Animator anim;
+	Animator altroAnim;
 	//variabili per hash trigger
 	private int pugno;
 	private int avanti;
 	private int indietro;
 	private int morte;
-	private int fermo;
 	//variabili per i nomi dei trigger
 	public string triggerPugno;
 	public string triggerAvanti;
 	public string triggerIndietro;
-	public string triggerFermo;
 	public string triggerMorte;
 	//profilo giocatore 1o2
 	public int profilo;
-	//contatore morte
-	private int vita=5;
+	public GameObject gestoreVita1;
+	public GameObject gestoreVita2;
+	//timer vita
+	private float timerVita; 
 
 	// Use this for initialization
 	void Start () 
 	{
+		timerVita = 0f;
+
 		anim = GetComponent<Animator> ();
+		altroAnim = altroCowboy.GetComponent<Animator> ();
 
 		pugno = Animator.StringToHash (triggerPugno);
 		avanti = Animator.StringToHash (triggerAvanti);
 		indietro = Animator.StringToHash (triggerIndietro);
-		fermo = Animator.StringToHash (triggerFermo);
 		morte = Animator.StringToHash (triggerMorte);
 	}
 	
 	// Update is called once per frame
 	void Update () 
 	{
-		if (vita <= 0)
+		timerVita += Time.deltaTime;
+
+		if (timerVita >= 5f) 
 		{
-			anim.SetTrigger (morte);
+			if (profilo == 1) 
+			{
+				timerVita = 0f;
+				gestoreVita1.GetComponent<GestioneVita> ().aumentoVita ();
+			}
+			if (profilo == 2)
+			{
+				timerVita = 0f;
+				gestoreVita2.GetComponent<GestioneVita> ().aumentoVita ();
+			}
 		}
+
 		if (profilo == 1) 
 		{
 			if (Input.GetKeyDown (KeyCode.E)) 
@@ -55,10 +72,7 @@ public class CowboyMove : MonoBehaviour
 			{
 				anim.SetTrigger (indietro);
 			}
-			if (Input.GetKeyUp (KeyCode.W) || Input.GetKeyUp (KeyCode.S)) 
-			{
-				anim.SetTrigger (fermo);
-			}
+
 
 		} 
 		else 
@@ -75,10 +89,7 @@ public class CowboyMove : MonoBehaviour
 			{
 				anim.SetTrigger (indietro);
 			}
-			if (Input.GetKeyUp (KeyCode.UpArrow) || Input.GetKeyUp (KeyCode.DownArrow)) 
-			{
-				anim.SetTrigger (fermo);
-			}
+
 			
 		}
 
@@ -87,14 +98,22 @@ public class CowboyMove : MonoBehaviour
 
 	void OnTriggerEnter(Collider other)
 	{
-		if (other.gameObject.tag.Equals ("ManoUno") && profilo == 2) 
+		if (other.gameObject.tag.Equals ("ManoUno") && profilo == 2 && altroAnim.GetCurrentAnimatorStateInfo(0).IsName("Punch") ) 
 		{
-			vita--;
+			gestoreVita2.GetComponent<GestioneVita> ().colpoSubito();
+			timerVita = 0f;
 		}
-		if (other.gameObject.tag.Equals ("ManoDue") && profilo == 1) 
+		if (other.gameObject.tag.Equals ("ManoDue") && profilo == 1 && altroAnim.GetCurrentAnimatorStateInfo(0).IsName("Punch")) 
 		{
-			vita--;
+			gestoreVita1.GetComponent<GestioneVita> ().colpoSubito();
+			timerVita = 0f;
 		}
 
 	}
+
+	public void muori()
+	{
+		anim.SetTrigger (morte);
+	}
+
 }
